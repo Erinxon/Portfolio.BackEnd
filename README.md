@@ -28,7 +28,6 @@ Create table WorkExperience
 	EndDate datetime,
 	CreateDate datetime default GetDate()
 )
-drop table WorkExperience
 go
 create table Levels
 (

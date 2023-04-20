@@ -1,15 +1,10 @@
-﻿using Application.Auth.Queries;
-using Application.Common.Interfaces.Authentication;
+﻿using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persitence;
 using Application.DTOS.AuthResult;
+using Application.Services.Auth.Queries;
 using Application.Tools;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services.Auth.Commands
 {

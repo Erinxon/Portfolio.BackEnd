@@ -1,12 +1,7 @@
-﻿using Application.Skills.Commands;
-using Application.Skills.Queries;
+﻿using Application.Services.Skills.Commands;
+using Application.Services.Skills.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {

@@ -1,6 +1,4 @@
-﻿using Application.Common.Interfaces.Persitence;
-using Application.Skills.Handlers;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application

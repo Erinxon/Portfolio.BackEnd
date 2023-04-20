@@ -1,5 +1,4 @@
-﻿using Application.Skills.Queries;
-using MediatR;
+﻿using MediatR;
 using Domain.Entities;
 using Application.Common.Interfaces.Persitence;
 using Domain.Shared;

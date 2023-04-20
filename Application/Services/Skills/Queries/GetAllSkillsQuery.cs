@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Skills.Queries
+namespace Application.Services.Skills.Queries
 {
     public class GetAllSkillsQuery : IRequest<IEnumerable<Skill>>
     {

@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
 builder.Services.AddPresentation();
-builder.Services.AddInfratructure(configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddInfratructure(configuration);
 
 builder.Services.AddSwaggerGen();
 

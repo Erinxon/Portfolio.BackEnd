@@ -1,7 +1,7 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using MediatR;
 
-namespace Application.Skills.Commands
+namespace Application.Services.Skills.Commands
 {
     public class CreateSkillHandler : IRequestHandler<CreateSkillCommand, int>
     {

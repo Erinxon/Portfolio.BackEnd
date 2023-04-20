@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Skills.Commands
+namespace Application.Services.Skills.Commands
 {
     public record CreateSkillCommand(int LanguageId, int LevelId, int UserId) : IRequest<int>;
 }

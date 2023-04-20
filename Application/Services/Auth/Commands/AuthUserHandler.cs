@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persitence;
+using Application.DTOs.ApiResponse;
 using Application.DTOS.AuthResult;
 using Application.Tools;
 using Domain.Entities;
@@ -9,7 +10,7 @@ using MediatR;
 
 namespace Application.Services.Auth.Commands
 {
-    public class AuthUserHandler : IRequestHandler<AuthUserCommand, AuthenticationResult>
+    public class AuthUserHandler : IRequestHandler<AuthUserCommand, ApiResponse<AuthenticationResult>>
     {
 
         private readonly IFromSqlRawGeneric fromSqlRawGeneric;
@@ -21,7 +22,7 @@ namespace Application.Services.Auth.Commands
             this.jwtGenerator = jwtGenerator;   
         }
 
-        public async Task<AuthenticationResult> Handle(AuthUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AuthenticationResult>> Handle(AuthUserCommand request, CancellationToken cancellationToken)
         {
             User user = await this.fromSqlRawGeneric
                 .GetSingleFromSql<User>(
@@ -33,9 +34,9 @@ namespace Application.Services.Auth.Commands
 
             string token = this.jwtGenerator.GenerateJwt(user.UserId, user.Name, user.Email);
 
-            return new AuthenticationResult
+            return new ApiResponse<AuthenticationResult>
             (
-               user.UserId, user.Name, user.Email, token
+               new AuthenticationResult(user.UserId, user.Name, user.Email, token)
             );
 
         }

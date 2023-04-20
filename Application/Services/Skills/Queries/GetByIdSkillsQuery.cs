@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.ApiResponse;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services.Skills.Queries
 {
-    public class GetByIdSkillsQuery : IRequest<Skill>
+    public class GetByIdSkillsQuery : IRequest<ApiResponse<Skill>>
     {
         public int SkillId { get; set; }
 

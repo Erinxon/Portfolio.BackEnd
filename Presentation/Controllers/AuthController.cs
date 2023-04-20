@@ -1,4 +1,6 @@
-﻿using Application.Services.Auth.Commands;
+﻿using Application.DTOs.ApiResponse;
+using Application.DTOS.AuthResult;
+using Application.Services.Auth.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +19,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateUserCommand createUserCommand, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<AuthenticationResult>>> Post([FromBody] CreateUserCommand createUserCommand, CancellationToken cancellationToken)
         {
             var authResult = await this._mediator.Send(createUserCommand, cancellationToken);
 
@@ -25,7 +27,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] AuthUserCommand authUserCommand, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<AuthenticationResult>>> Login([FromBody] AuthUserCommand authUserCommand, CancellationToken cancellationToken)
         {
             var authResult = await this._mediator.Send(authUserCommand, cancellationToken);
 

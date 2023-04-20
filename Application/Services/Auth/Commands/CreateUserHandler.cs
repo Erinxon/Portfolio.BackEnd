@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persitence;
+using Application.DTOs.ApiResponse;
 using Application.DTOS.AuthResult;
 using Application.Services.Auth.Queries;
 using Application.Tools;
@@ -8,7 +9,7 @@ using MediatR;
 
 namespace Application.Services.Auth.Commands
 {
-    public class CreateUserHandler : IRequestHandler<CreateUserCommand, AuthenticationResult>
+    public class CreateUserHandler : IRequestHandler<CreateUserCommand, ApiResponse<AuthenticationResult>>
     {
         private readonly IFromSqlRawGeneric fromSqlRawGeneric;
         private readonly IMediator mediator;
@@ -21,19 +22,19 @@ namespace Application.Services.Auth.Commands
             this.jwtGenerator = jwtGenerator;
         }
 
-        public async Task<AuthenticationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AuthenticationResult>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             int UserId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_CreateUser] '{request.Name}', '{request.Email}', '{request.Password.ToEncryptedPassword()}', @Identity out", cancellationToken);
 
-            User user = await mediator.Send(new GetUserByIdQuery(UserId), cancellationToken);
-
+            var userResponse =  await mediator.Send(new GetUserByIdQuery(UserId), cancellationToken);
+            var user = userResponse.Data;
             if (user == null) return null;
 
             string token = this.jwtGenerator.GenerateJwt(user.UserId, user.Name, user.Email);
 
-            return new AuthenticationResult
+            return new ApiResponse<AuthenticationResult>
             (
-               user.UserId, user.Name, user.Email, token
+               new AuthenticationResult(user.UserId, user.Name, user.Email, token)
             );
 
         }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.ApiResponse;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services.Auth.Queries
 {
-    public record GetUserByIdQuery : IRequest<User>
+    public record GetUserByIdQuery : IRequest<ApiResponse<User>>
     {
         public int UserId { get; set; }
 

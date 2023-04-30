@@ -17,17 +17,20 @@ namespace Infrastructure.Persistence
         {
         }
 
-        public virtual DbSet<Language> Languages { get; set; } = null!;
-        public virtual DbSet<Level> Levels { get; set; } = null!;
-        public virtual DbSet<Platform> Platforms { get; set; } = null!;
-        public virtual DbSet<Proyect> Proyects { get; set; } = null!;
-        public virtual DbSet<ProyectSkill> ProyectSkills { get; set; } = null!;
-        public virtual DbSet<Skill> Skills { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
-        public virtual DbSet<WorkExperience> WorkExperiences { get; set; } = null!;
+        public virtual DbSet<Language> Languages { get; set; }
+        public virtual DbSet<Level> Levels { get; set; }
+        public virtual DbSet<Platform> Platforms { get; set; }
+        public virtual DbSet<Proyect> Proyects { get; set; }
+        public virtual DbSet<ProyectSkill> ProyectSkills { get; set; }
+        public virtual DbSet<Skill> Skills { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ViewProyect> ViewProyects { get; set; }
+        public virtual DbSet<ViewProyectSkill> ViewProyectSkills { get; set; }
+        public virtual DbSet<WorkExperience> WorkExperiences { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+       
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,6 +38,7 @@ namespace Infrastructure.Persistence
             modelBuilder.Entity<Language>(entity =>
             {
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
@@ -57,6 +61,7 @@ namespace Infrastructure.Persistence
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
@@ -80,6 +85,7 @@ namespace Infrastructure.Persistence
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -97,10 +103,8 @@ namespace Infrastructure.Persistence
 
             modelBuilder.Entity<ProyectSkill>(entity =>
             {
-                entity.HasIndex(e => e.SkillId, "UQ__ProyectS__DFA09186F47A9058")
+                entity.HasIndex(e => e.SkillId, "UQ__ProyectS__DFA09186C1D1BBDB")
                     .IsUnique();
-
-                entity.Property(e => e.ProyectSkillId).ValueGeneratedNever();
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
@@ -110,13 +114,13 @@ namespace Infrastructure.Persistence
                     .WithMany(p => p.ProyectSkills)
                     .HasForeignKey(d => d.ProyectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProyectSk__Proye__74AE54BC");
+                    .HasConstraintName("FK__ProyectSk__Proye__07C12930");
 
                 entity.HasOne(d => d.Skill)
                     .WithOne(p => p.ProyectSkill)
                     .HasForeignKey<ProyectSkill>(d => d.SkillId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProyectSk__Skill__75A278F5");
+                    .HasConstraintName("FK__ProyectSk__Skill__08B54D69");
             });
 
             modelBuilder.Entity<Skill>(entity =>
@@ -148,15 +152,67 @@ namespace Infrastructure.Persistence
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Email)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)
+                    .IsRequired()
                     .HasMaxLength(256)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ViewProyect>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_Proyects");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DomainUrl)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GithubUrl)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PlatformName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ViewProyectSkill>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_ProyectSkills");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.LanguageName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LevelName)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
             });
 
@@ -165,6 +221,7 @@ namespace Infrastructure.Persistence
                 entity.ToTable("WorkExperience");
 
                 entity.Property(e => e.CompanyName)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -175,6 +232,7 @@ namespace Infrastructure.Persistence
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.PositionName)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 

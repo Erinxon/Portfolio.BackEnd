@@ -2,14 +2,16 @@
 using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
 using Application.DTOS.AuthResult;
+using Application.Specifications;
 using Application.Tools;
-using Domain.Entities;
 using Domain.Shared;
 using MediatR;
-
+using Domain.Entities;
 
 namespace Application.Services.Auth.Commands
 {
+    public record AuthUserCommand(string Email, string Password) : IRequest<ApiResponse<AuthenticationResult>>;
+
     public class AuthUserHandler : IRequestHandler<AuthUserCommand, ApiResponse<AuthenticationResult>>
     {
 
@@ -30,7 +32,10 @@ namespace Application.Services.Auth.Commands
                 new object[] { request.Email, request.Password.ToEncryptedPassword() }), 
                 cancellationToken);
 
-            if (user == null) return null;
+            if (user == null)
+            {
+                return new ApiResponse<AuthenticationResult>(ConstErrorCode.Auth401, ConstStatusCodes.Code401) ;
+            };
 
             string token = this.jwtGenerator.GenerateJwt(user.UserId, user.Name, user.Email);
 

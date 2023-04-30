@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces.Authentication;
+using Application.Specifications;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,12 +11,12 @@ namespace Infratructure.Authentication
 {
     public class JwtGenerator : IJwtGenerator
     {
-        private readonly IConfiguration configuration;
+        private readonly JwtAuthSetting JwtAuthSetting;
 
-        public JwtGenerator(IConfiguration configuration)
+        public JwtGenerator(IOptions<JwtAuthSetting> JwtAuthSetting)
         {
-            this.configuration = configuration;
-        }
+            this.JwtAuthSetting = JwtAuthSetting.Value;
+        }   
 
         public string GenerateJwt(int UserId, string Name, string Email)
         {
@@ -25,11 +27,11 @@ namespace Infratructure.Authentication
                 new Claim(JwtRegisteredClaimNames.UniqueName, UserId.ToString()),
             };
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtAuthSetting.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"],
-              claims, expires: DateTime.Now.AddDays(2),
+            var token = new JwtSecurityToken(JwtAuthSetting.Issuer, JwtAuthSetting.Audience,
+              claims, expires: DateTime.Now.AddDays(JwtAuthSetting.ExpiryTime),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

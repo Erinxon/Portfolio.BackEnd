@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persitence;
+using Application.Specifications;
 using Infrastructure.Persistence;
 using Infratructure.Authentication;
 using Infratructure.Repositories;
@@ -18,10 +19,10 @@ namespace Infrastructure
         {
             services.AddDbContext<PortfolioDbContext>(option =>
             {
-                option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                option.UseSqlServer(configuration.GetConnectionString(ConstSetting.ConnectionString));
             });
             services.AddScoped<IFromSqlRawGeneric, FromSqlRawGenery>();
-            services.AddSingleton<IConfiguration>(configuration);
+            services.Configure<JwtAuthSetting>(configuration.GetSection(ConstSetting.JwtAuthSection)); 
             services.AddSingleton<IJwtGenerator, JwtGenerator>();
             services.AddJwt(configuration);
             return services;
@@ -29,6 +30,8 @@ namespace Infrastructure
 
         private static IServiceCollection AddJwt(this IServiceCollection services, ConfigurationManager configuration)
         {
+            var JwtAuthSettings = new JwtAuthSetting();
+            configuration.Bind(ConstSetting.JwtAuthSection, JwtAuthSettings);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options => {
                    options.TokenValidationParameters = new TokenValidationParameters
@@ -37,13 +40,11 @@ namespace Infrastructure
                        ValidateAudience = true,
                        ValidateLifetime = true,
                        ValidateIssuerSigningKey = true,
-                       ValidIssuer = configuration["Jwt:Issuer"],
-                       ValidAudience = configuration["Jwt:Audience"],
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                       ValidIssuer = JwtAuthSettings.Issuer,
+                       ValidAudience = JwtAuthSettings.Audience,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtAuthSettings.Key))
                    };
                });
-
-
             return services;
         }
     }

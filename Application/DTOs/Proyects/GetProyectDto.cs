@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Domain.Entities;
 
-namespace Domain.Entities
+namespace Application.DTOs.Proyects
 {
-    public partial class Proyect
+    public class GetProyectDto
     {
-        public Proyect()
-        {
-            ProyectSkills = new HashSet<ProyectSkill>();
-        }
-
         public int ProyectId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -17,11 +11,9 @@ namespace Domain.Entities
         public string GithubUrl { get; set; }
         public string DomainUrl { get; set; }
         public int PlatformId { get; set; }
+        public string PlatformName { get; set; }
         public int? UserId { get; set; }
         public DateTime? CreateDate { get; set; }
-
-        public virtual Platform Platform { get; set; }
-        public virtual User User { get; set; }
-        public virtual ICollection<ProyectSkill> ProyectSkills { get; set; }
+        public virtual IEnumerable<ViewProyectSkill> ProyectSkills { get; set; }
     }
 }

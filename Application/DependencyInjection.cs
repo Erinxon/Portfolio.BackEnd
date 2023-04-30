@@ -12,6 +12,7 @@ namespace Application
                 configuration.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly);
             });
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+            services.AddAutoMapper(typeof(DependencyInjection).Assembly);
             return services;
         }
     }

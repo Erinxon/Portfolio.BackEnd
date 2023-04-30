@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.Specifications;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.ApiResponse
 {
+    public record ErrorDetail(string Description, string ErrorCode, int StatusCode, Guid ErrorId);
+
     public record ApiResponse<T>
     {
         public ApiResponse()
@@ -19,6 +22,13 @@ namespace Application.DTOs.ApiResponse
             this.Data = Data;
         }
 
+        public ApiResponse(string ErrorCode, int StatusCode)
+        {
+            var error = new ErrorDictionaries().ErrorDescriptions.FirstOrDefault(d => d.Key == ErrorCode);
+            this.Succeeded = false;
+            this.ErrorDetail = new ErrorDetail(error.Value, error.Key, StatusCode, Guid.NewGuid());
+        }
+
         public ApiResponse(int Identity)
         {
             this.Identity = Identity;
@@ -27,6 +37,6 @@ namespace Application.DTOs.ApiResponse
         public T Data { get; set; }
         public int Identity { get; set; }
         public bool Succeeded { get; set; }
-        public string Message { get; set; }
+        public ErrorDetail ErrorDetail { get; set; }
     }
 }

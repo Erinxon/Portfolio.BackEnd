@@ -3,6 +3,7 @@ using Application.Services.Skills.Commands;
 using Application.Services.Skills.Queries;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -18,21 +19,10 @@ namespace Presentation.Controllers
             this._mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<Skill>>>> Get(CancellationToken cancellationToken)
+        [HttpGet("{UserId}")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<Proyect>>>> Get(int UserId, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(new GetAllSkillsQuery(), cancellationToken));
-        }
-
-        [HttpGet("{SkillId}")]
-        public async Task<ActionResult<ApiResponse<Skill>>> GetById(int SkillId, CancellationToken cancellationToken)
-        {
-            var response = await _mediator.Send(new GetByIdSkillsQuery(SkillId), cancellationToken);
-            if(response.Data is null)
-            {
-                return NotFound("Skill NotFound");
-            }
-            return Ok(response);
+            return Ok(await _mediator.Send(new GetAllSkillsQuery(UserId), cancellationToken));
         }
 
         [HttpPost]

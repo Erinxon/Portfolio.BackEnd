@@ -3,12 +3,15 @@ using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
 using Application.DTOS.AuthResult;
 using Application.Services.Auth.Queries;
+using Application.Specifications;
 using Application.Tools;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Services.Auth.Commands
 {
+    public record CreateUserCommand(string Name, string Email, string Password) : IRequest<ApiResponse<AuthenticationResult>>;
+
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, ApiResponse<AuthenticationResult>>
     {
         private readonly IFromSqlRawGeneric fromSqlRawGeneric;
@@ -25,6 +28,11 @@ namespace Application.Services.Auth.Commands
         public async Task<ApiResponse<AuthenticationResult>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             int UserId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_CreateUser] '{request.Name}', '{request.Email}', '{request.Password.ToEncryptedPassword()}', @Identity out", cancellationToken);
+
+            if (UserId <= 0)
+            {
+                return new ApiResponse<AuthenticationResult>(ConstErrorCode.Create400, ConstStatusCodes.Code400);
+            };
 
             var userResponse =  await mediator.Send(new GetUserByIdQuery(UserId), cancellationToken);
             var user = userResponse.Data;

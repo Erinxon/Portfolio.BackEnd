@@ -4,6 +4,8 @@ using MediatR;
 
 namespace Application.Services.Skills.Commands
 {
+    public record CreateSkillCommand(int LanguageId, int LevelId, int UserId) : IRequest<ApiResponse<int>>;
+
     public class CreateSkillHandler : IRequestHandler<CreateSkillCommand, ApiResponse<int>>
     {
         private readonly IFromSqlRawGeneric fromSqlRawGeneric;

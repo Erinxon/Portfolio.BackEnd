@@ -13,9 +13,9 @@ namespace Domain.Entities
         }
 
         public int UserId { get; set; }
-        public string Name { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
         public DateTime? CreateDate { get; set; }
 
         public virtual ICollection<Proyect> Proyects { get; set; }

@@ -11,9 +11,9 @@ namespace Domain.Entities
         public int? UserId { get; set; }
         public DateTime? CreateDate { get; set; }
 
-        public virtual Language? Language { get; set; }
-        public virtual Level? Level { get; set; }
-        public virtual User? User { get; set; }
-        public virtual ProyectSkill? ProyectSkill { get; set; }
+        public virtual Language Language { get; set; }
+        public virtual Level Level { get; set; }
+        public virtual User User { get; set; }
+        public virtual ProyectSkill ProyectSkill { get; set; }
     }
 }

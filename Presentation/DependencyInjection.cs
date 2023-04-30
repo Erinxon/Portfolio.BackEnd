@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 
 namespace Presentation
 {
@@ -6,6 +7,11 @@ namespace Presentation
     {
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
+            services.AddEndpointsApiExplorer();
             return services;
         }
     }

@@ -12,6 +12,9 @@ namespace Application.Common.Interfaces.Persitence
         Task<IEnumerable<TEntity>> GetAllFromSql<TEntity>(FromSqlRawParams fromSqlParams, CancellationToken cancellationToken) where TEntity : class;
         Task<TEntity> GetSingleFromSql<TEntity>(FromSqlRawParams fromSqlParams, CancellationToken cancellationToken) where TEntity : class;
         Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken);
+        Task BeginTransactionAsync(CancellationToken cancellationToke);
+        Task CommitTransactionAsync(CancellationToken cancellationToke);
+        Task RollbackTransactionAsync(CancellationToken cancellationToke);
     }
 
 }

@@ -23,8 +23,8 @@ namespace Application.Specifications
             // Errores de servidor interno
             this.ErrorDescriptions.Add(ConstErrorCode.ServerError500, "Error interno del servidor");
 
-            this.ErrorDescriptions.Add(ConstErrorCode.Create400, "No se pudo crear el usuario");
-            this.ErrorDescriptions.Add(ConstErrorCode.Create409, "El usuario ya existe");
+            this.ErrorDescriptions.Add(ConstErrorCode.Create400, "No se pudo crear el registro");
+            this.ErrorDescriptions.Add(ConstErrorCode.Create409, "El registro ya existe");
 
             this.ErrorDescriptions.Add(ConstErrorCode.Update400, "No se pudo actualizar el registrp");
             this.ErrorDescriptions.Add(ConstErrorCode.Update404, "No se pudo encontrar el registro a actualizar");

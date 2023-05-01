@@ -3,7 +3,6 @@ using Application.Services.Skills.Commands;
 using Application.Services.Skills.Queries;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers

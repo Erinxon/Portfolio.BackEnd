@@ -28,7 +28,8 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiResponse<int>>> Post([FromBody] CreateProyectCommand CreateProyectCommand, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(CreateProyectCommand, cancellationToken));
+            var response = await _mediator.Send(CreateProyectCommand, cancellationToken);
+            return response.ErrorDetail is null ? Ok(response) : StatusCode(response.ErrorDetail.StatusCode, response);
         }
     }
 }

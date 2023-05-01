@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public partial class WorkExperience
+    public partial class ViewWorkExperience
     {
         public int WorkExperienceId { get; set; }
         public string CompanyName { get; set; }
@@ -13,7 +13,5 @@ namespace Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? CreateDate { get; set; }
-
-        public virtual User User { get; set; }
     }
 }

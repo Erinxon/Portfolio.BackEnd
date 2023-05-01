@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
 using Application.Services.ProyectSkills.Commands;
+using Application.Specifications;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -36,16 +37,27 @@ namespace Application.Services.Proyects.Commands
 
         public async Task<ApiResponse<int>> Handle(CreateProyectCommand request, CancellationToken cancellationToken)
         {
-            var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_SetProyect] 0, '{request.Name}', '{request.Description}', '{request.ImageGuidId}', '{request.GithubUrl}', '{request.DomainUrl}', {request.PlatformId}, {request.UserId}, @Identity out", cancellationToken);
-
-            var ProyectSkills = request?.CreateProyectSkillCommands?.Select(ProyectSkill =>
+            await this.fromSqlRawGeneric.BeginTransactionAsync(cancellationToken);
+            try
             {
-                CreateProyectSkillCommand createProyectSkill = ProyectSkill with { ProyectId = ProyectId };
-                return _mediator.Send(createProyectSkill, cancellationToken);
-            });
+                var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_SetProyect] 0, '{request.Name}', '{request.Description}', '{request.ImageGuidId}', '{request.GithubUrl}', '{request.DomainUrl}', {request.PlatformId}, {request.UserId}, @Identity out", cancellationToken);
 
-            _ = Task.Run(async () => await Task.WhenAll(ProyectSkills));
-            return new ApiResponse<int>(ProyectId);
+                var ProyectSkills = request?.CreateProyectSkillCommands?.Select(ProyectSkill =>
+                {
+                    CreateProyectSkillCommand createProyectSkill = ProyectSkill with { ProyectId = ProyectId };
+                    return _mediator.Send(createProyectSkill, cancellationToken);
+                });
+
+                _ = Task.Run(async () => await Task.WhenAll(ProyectSkills));
+
+                await this.fromSqlRawGeneric.CommitTransactionAsync(cancellationToken);
+                return new ApiResponse<int>(ProyectId);
+            }
+            catch (Exception)
+            {
+                await this.fromSqlRawGeneric.RollbackTransactionAsync(cancellationToken);
+                return new ApiResponse<int>(ConstErrorCode.Create400, ConstStatusCodes.Code400);
+            }
         }
     }
 }

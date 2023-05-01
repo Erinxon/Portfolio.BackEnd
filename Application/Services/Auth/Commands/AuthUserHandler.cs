@@ -34,7 +34,7 @@ namespace Application.Services.Auth.Commands
 
             if (user == null)
             {
-                return new ApiResponse<AuthenticationResult>(ConstErrorCode.Auth401, ConstStatusCodes.Code401) ;
+                return new ApiResponse<AuthenticationResult>(ConstErrorCode.Auth401, ConstStatusCodes.Code401);
             };
 
             string token = this.jwtGenerator.GenerateJwt(user.UserId, user.Name, user.Email);

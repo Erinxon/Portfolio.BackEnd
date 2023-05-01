@@ -24,13 +24,16 @@ namespace Infrastructure.Persistence
         public virtual DbSet<ProyectSkill> ProyectSkills { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ViewLanguage> ViewLanguages { get; set; }
+        public virtual DbSet<ViewLevel> ViewLevels { get; set; }
+        public virtual DbSet<ViewPlatform> ViewPlatforms { get; set; }
         public virtual DbSet<ViewProyect> ViewProyects { get; set; }
         public virtual DbSet<ViewProyectSkill> ViewProyectSkills { get; set; }
+        public virtual DbSet<ViewWorkExperience> ViewWorkExperiences { get; set; }
         public virtual DbSet<WorkExperience> WorkExperiences { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-       
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -167,6 +170,51 @@ namespace Infrastructure.Persistence
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<ViewLanguage>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_Languages");
+
+                entity.Property(e => e.LanguageId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ViewLevel>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_Levels");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.LevelId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ViewPlatform>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_Platforms");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PlatformId).ValueGeneratedOnAdd();
+            });
+
             modelBuilder.Entity<ViewProyect>(entity =>
             {
                 entity.HasNoKey();
@@ -216,6 +264,35 @@ namespace Infrastructure.Persistence
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<ViewWorkExperience>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("View_WorkExperience");
+
+                entity.Property(e => e.CompanyName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PositionName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.Property(e => e.WorkExperienceId).ValueGeneratedOnAdd();
+            });
+
             modelBuilder.Entity<WorkExperience>(entity =>
             {
                 entity.ToTable("WorkExperience");
@@ -229,6 +306,10 @@ namespace Infrastructure.Persistence
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.Description)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.PositionName)
@@ -241,7 +322,7 @@ namespace Infrastructure.Persistence
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.WorkExperiences)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__WorkExper__UserI__656C112C");
+                    .HasConstraintName("FK__WorkExper__UserI__1332DBDC");
             });
 
             OnModelCreatingPartial(modelBuilder);

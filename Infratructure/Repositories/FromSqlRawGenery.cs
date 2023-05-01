@@ -1,8 +1,11 @@
 ﻿using Application.Common.Interfaces.Persitence;
+using Application.Services.WorkExperience.Commands;
+using Application.Tools;
 using Domain.Shared;
 using Infrastructure.Persistence;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
 namespace Infratructure.Repositories
@@ -10,6 +13,7 @@ namespace Infratructure.Repositories
     public class FromSqlRawGenery : IFromSqlRawGeneric
     {
         private readonly PortfolioDbContext dbContext;
+        private IDbContextTransaction transaction;
 
         public FromSqlRawGenery(PortfolioDbContext dbContext)
         {
@@ -33,10 +37,28 @@ namespace Infratructure.Repositories
             {
                 new SqlParameter("@Identity", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
+
             _ = await this.dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
             return (int) parameters.FirstOrDefault().Value;
 
         }
 
+        public async Task BeginTransactionAsync(CancellationToken cancellationToke)
+        {
+            using IDbContextTransaction transaction = await this.dbContext.Database.BeginTransactionAsync(cancellationToke);
+            this.transaction = transaction;
+        }
+
+        public async Task CommitTransactionAsync(CancellationToken cancellationToke)
+        {
+            await this.transaction.CommitAsync(cancellationToke);
+            await this.transaction.DisposeAsync();
+        }
+
+        public async Task RollbackTransactionAsync(CancellationToken cancellationToke)
+        {
+            await this.transaction.RollbackAsync(cancellationToke);
+            await this.transaction.DisposeAsync();
+        }
     }
 }

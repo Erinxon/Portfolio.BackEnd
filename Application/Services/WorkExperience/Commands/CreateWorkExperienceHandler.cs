@@ -23,7 +23,8 @@ namespace Application.Services.WorkExperience.Commands
 
         public async Task<ApiResponse<int>> Handle(CreateWorkExperienceCommand request, CancellationToken cancellationToken)
         {
-            var WorkExperienceId = await this.fromSqlRaw.ExecuteSqlRawAsync($"exec [dbo].[Sp_SetWorkExperience] 0, '{request.CompanyName}', '{request.PositionName}', '{request.Description}', {request.UserId}, '{request.StartDate}', '{request.EndDate}', @Identity out", cancellationToken);
+            var sql = $"exec [dbo].[Sp_SetWorkExperience] @WorkExperienceId, @CompanyName, @PositionName, @Description, @UserId, @StartDate, @EndDate, @Identity out";
+            var WorkExperienceId = await this.fromSqlRaw.ExecuteSqlRawAsync(sql, request, cancellationToken);
             return new ApiResponse<int>(WorkExperienceId);
         }
     }

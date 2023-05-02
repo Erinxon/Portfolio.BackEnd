@@ -10,17 +10,21 @@ namespace Application.Tools
 {
     public static class Utility
     {
-        public static SqlDbType GetSqlDbType(object value)
+        public static SqlDbType GetSqlDbType(Type type)
         {
-            var type = value?.GetType();
-            return type?.Name switch
+            return type.FullName switch
             {
-                "String" => SqlDbType.VarChar,
-                "Int32" => SqlDbType.Int,
-                "DateTime" => SqlDbType.DateTime,
-                "Guid" => SqlDbType.UniqueIdentifier,
-                "Long" => SqlDbType.BigInt,
-                _ => SqlDbType.VarChar
+                string FullNameType when FullNameType.Contains(typeof(int).Name) => SqlDbType.Int,
+                string FullNameType when FullNameType.Contains(typeof(long).Name) => SqlDbType.BigInt,
+                string FullNameType when FullNameType.Contains(typeof(string).Name) => SqlDbType.NVarChar,
+                string FullNameType when FullNameType.Contains(typeof(DateTime).Name) => SqlDbType.DateTime,
+                string FullNameType when FullNameType.Contains(typeof(decimal).Name) => SqlDbType.Decimal,
+                string FullNameType when FullNameType.Contains(typeof(double).Name) => SqlDbType.Float,
+                string FullNameType when FullNameType.Contains(typeof(bool).Name) => SqlDbType.Bit,
+                string FullNameType when FullNameType.Contains(typeof(byte[]).Name) => SqlDbType.VarBinary,
+                string FullNameType when FullNameType.Contains(typeof(Guid).Name) => SqlDbType.UniqueIdentifier,
+                string FullNameType when FullNameType.Contains(typeof(TimeSpan).Name) => SqlDbType.Time,
+                _ => throw new ArgumentException("Tipo de dato no soportado: " + type.Name),
             };
         }
 

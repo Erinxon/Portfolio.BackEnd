@@ -43,6 +43,27 @@ namespace Infratructure.Repositories
 
         }
 
+        public async Task<int> ExecuteSqlRawAsync<T>(string sql, T Type, CancellationToken cancellationToken)
+        {
+            List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@Identity", SqlDbType.Int) { Direction = ParameterDirection.Output }
+            };
+            foreach (var Property in Type.GetType().GetProperties())
+            {
+                var value = Property.GetValue(Type, null);
+                var name = Property.Name;
+                var type = Property.PropertyType;
+
+                parameters.Add(new SqlParameter("@" + name, value ?? DBNull.Value)
+                {
+                    SqlDbType = Utility.GetSqlDbType(type)
+                });
+            }
+            _ = await this.dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
+            return (int)parameters.FirstOrDefault().Value;
+        }
+
         public async Task BeginTransactionAsync(CancellationToken cancellationToke)
         {
             using IDbContextTransaction transaction = await this.dbContext.Database.BeginTransactionAsync(cancellationToke);
@@ -60,5 +81,6 @@ namespace Infratructure.Repositories
             await this.transaction.RollbackAsync(cancellationToke);
             await this.transaction.DisposeAsync();
         }
+      
     }
 }

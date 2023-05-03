@@ -8,7 +8,7 @@ ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddApplication();
 builder.Services.AddPresentation();
-builder.Services.AddInfratructure(configuration);
+builder.Services.AddInfrastructure(configuration);
 
 builder.Services.AddSwaggerGen();
 

@@ -34,6 +34,7 @@ namespace Infrastructure.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -106,9 +107,6 @@ namespace Infrastructure.Persistence
 
             modelBuilder.Entity<ProyectSkill>(entity =>
             {
-                entity.HasIndex(e => e.SkillId, "UQ__ProyectS__DFA09186C1D1BBDB")
-                    .IsUnique();
-
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -117,20 +115,18 @@ namespace Infrastructure.Persistence
                     .WithMany(p => p.ProyectSkills)
                     .HasForeignKey(d => d.ProyectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProyectSk__Proye__07C12930");
+                    .HasConstraintName("FK__ProyectSk__Proye__1CBC4616");
 
                 entity.HasOne(d => d.Skill)
-                    .WithOne(p => p.ProyectSkill)
-                    .HasForeignKey<ProyectSkill>(d => d.SkillId)
+                    .WithMany(p => p.ProyectSkills)
+                    .HasForeignKey(d => d.SkillId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProyectSk__Skill__08B54D69");
+                    .HasConstraintName("FK__ProyectSk__Skill__1DB06A4F");
             });
 
             modelBuilder.Entity<Skill>(entity =>
             {
-                entity.Property(e => e.CreateDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Language)
                     .WithMany(p => p.Skills)

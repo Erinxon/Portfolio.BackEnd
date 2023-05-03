@@ -43,13 +43,10 @@ namespace Application.Services.Proyects.Queries
             var proyects = await fromSqlRaw.GetAllFromSql<ViewProyect>(new FromSqlRawParams(StoreProcedure.Sp_GetProyects, new object[] { request.UserId }), cancellationToken);
            
             var response = new ApiResponse<IEnumerable<GetProyectDto>>(_mapper.Map<IEnumerable<GetProyectDto>>(proyects));
-            await Task.Run(async () =>
+            foreach (var proyect in response.Data)
             {
-                foreach (var proyect in response.Data)
-                {
-                   proyect.ProyectSkills = await this._mediator.Send(new GetProyectSkillQuery(proyect.ProyectId), cancellationToken);
-                }
-            });
+                proyect.ProyectSkills = await this._mediator.Send(new GetProyectSkillQuery(proyect.ProyectId), cancellationToken);
+            }
             return response;
         }
     }

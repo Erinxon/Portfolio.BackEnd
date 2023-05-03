@@ -6,6 +6,7 @@ using Infrastructure.Persistence;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Infratructure.Repositories
@@ -55,10 +56,13 @@ namespace Infratructure.Repositories
                 var name = Property.Name;
                 var type = Property.PropertyType;
 
-                parameters.Add(new SqlParameter("@" + name, value ?? DBNull.Value)
+                if (!type.FullName.Contains(typeof(List<>).Name))
                 {
-                    SqlDbType = Utility.GetSqlDbType(type)
-                });
+                    parameters.Add(new SqlParameter("@" + name, value ?? DBNull.Value)
+                    {
+                        SqlDbType = Utility.GetSqlDbType(type)
+                    });
+                }
             }
             _ = await this.dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
             return (int)parameters.FirstOrDefault().Value;
@@ -66,7 +70,7 @@ namespace Infratructure.Repositories
 
         public async Task BeginTransactionAsync(CancellationToken cancellationToke)
         {
-            using IDbContextTransaction transaction = await this.dbContext.Database.BeginTransactionAsync(cancellationToke);
+            IDbContextTransaction transaction = await this.dbContext.Database.BeginTransactionAsync(cancellationToke);
             this.transaction = transaction;
         }
 

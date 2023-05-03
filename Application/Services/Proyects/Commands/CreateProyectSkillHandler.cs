@@ -42,18 +42,15 @@ namespace Application.Services.Proyects.Commands
             try
             {
                 var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync(StoreProcedure.Sp_SetProyect, request, cancellationToken);
-                var ProyectSkills = request?.CreateProyectSkillCommands?.Select(ProyectSkill =>
+                foreach (var ProyectSkill in request?.CreateProyectSkillCommands)
                 {
                     CreateProyectSkillCommand createProyectSkill = ProyectSkill with { ProyectId = ProyectId };
-                    return _mediator.Send(createProyectSkill, cancellationToken);
-                });
-
-                _ = Task.Run(async () => await Task.WhenAll(ProyectSkills));
-
+                    await _mediator.Send(createProyectSkill, cancellationToken);
+                }
                 await this.fromSqlRawGeneric.CommitTransactionAsync(cancellationToken);
                 return new ApiResponse<int>(ProyectId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await this.fromSqlRawGeneric.RollbackTransactionAsync(cancellationToken);
                 return new ApiResponse<int>(ConstErrorCode.Create400, ConstStatusCodes.Code400);

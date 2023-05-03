@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -19,7 +20,7 @@ namespace Application.Services.Languages.Queries
 
         public async Task<ApiResponse<IEnumerable<ViewLanguage>>> Handle(GetLanguagesQuery request, CancellationToken cancellationToken)
         {
-            var Languages = await fromSqlRaw.GetAllFromSql<ViewLanguage>(new FromSqlRawParams("[dbo].[Sp_GetLanguages] {0}", new object[] { null }), cancellationToken);
+            var Languages = await fromSqlRaw.GetAllFromSql<ViewLanguage>(new FromSqlRawParams(StoreProcedure.Sp_GetLanguages, new object[] { null }), cancellationToken);
             return new ApiResponse<IEnumerable<ViewLanguage>>(Languages);
         }
     }

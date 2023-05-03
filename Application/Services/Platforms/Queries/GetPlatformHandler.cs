@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -24,7 +25,7 @@ namespace Application.Services.Platforms.Queries
 
         public async Task<ApiResponse<IEnumerable<ViewPlatform>>> Handle(GetPlatformQuery request, CancellationToken cancellationToken)
         {
-            var Platforms = await fromSqlRaw.GetAllFromSql<ViewPlatform>(new FromSqlRawParams("[dbo].[Sp_GetPlatforms] {0}", new object[] { null }), cancellationToken);
+            var Platforms = await fromSqlRaw.GetAllFromSql<ViewPlatform>(new FromSqlRawParams(StoreProcedure.Sp_GetPlatforms, new object[] { null }), cancellationToken);
             return new ApiResponse<IEnumerable<ViewPlatform>>(Platforms);
         }
     }

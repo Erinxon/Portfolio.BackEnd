@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using MediatR;
 
 namespace Application.Services.Skills.Commands
@@ -17,7 +18,7 @@ namespace Application.Services.Skills.Commands
 
         public async Task<ApiResponse<int>> Handle(CreateSkillCommand request, CancellationToken cancellationToken)
         {
-            var skillId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_SetSkills] {request.LanguageId}, {request.LevelId}, {request.UserId}, @Identity out", cancellationToken);
+            var skillId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync(StoreProcedure.Sp_SetSkills, request, cancellationToken);
             return new ApiResponse<int>(skillId);
         }
 

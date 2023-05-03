@@ -14,6 +14,7 @@ namespace Application.Services.Proyects.Commands
 {
     public record CreateProyectCommand : IRequest<ApiResponse<int>>
     {
+        public int ProyectId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Guid ImageGuidId { get; set; }
@@ -40,8 +41,7 @@ namespace Application.Services.Proyects.Commands
             await this.fromSqlRawGeneric.BeginTransactionAsync(cancellationToken);
             try
             {
-                var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_SetProyect] 0, '{request.Name}', '{request.Description}', '{request.ImageGuidId}', '{request.GithubUrl}', '{request.DomainUrl}', {request.PlatformId}, {request.UserId}, @Identity out", cancellationToken);
-
+                var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync(StoreProcedure.Sp_SetProyect, request, cancellationToken);
                 var ProyectSkills = request?.CreateProyectSkillCommands?.Select(ProyectSkill =>
                 {
                     CreateProyectSkillCommand createProyectSkill = ProyectSkill with { ProyectId = ProyectId };

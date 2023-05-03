@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Infratructure.Repositories
+namespace Infrastructure.Repositories
 {
     public class FromSqlRawGenery : IFromSqlRawGeneric
     {

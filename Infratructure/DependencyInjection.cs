@@ -2,8 +2,8 @@
 using Application.Common.Interfaces.Persitence;
 using Application.Specifications;
 using Infrastructure.Persistence;
-using Infratructure.Authentication;
-using Infratructure.Repositories;
+using Infrastructure.Authentication;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +15,7 @@ namespace Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfratructure(this IServiceCollection services, ConfigurationManager configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddDbContext<PortfolioDbContext>(option =>
             {

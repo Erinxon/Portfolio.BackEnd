@@ -44,7 +44,7 @@ namespace Infrastructure.Repositories
 
         }
 
-        public async Task<int> ExecuteSqlRawAsync<T>(string sql, T Type, CancellationToken cancellationToken)
+        public async Task<int> ExecuteSqlRawAsync<T>(string SQL, T Type, CancellationToken cancellationToken)
         {
             List<SqlParameter> parameters = new()
             {
@@ -56,15 +56,17 @@ namespace Infrastructure.Repositories
                 var name = Property.Name;
                 var type = Property.PropertyType;
 
-                if (!type.FullName.Contains(typeof(List<>).Name))
+                SqlDbType? sqlDbType = Utility.GetSqlDbType(type);
+
+                if (sqlDbType.HasValue)
                 {
                     parameters.Add(new SqlParameter("@" + name, value ?? DBNull.Value)
                     {
-                        SqlDbType = Utility.GetSqlDbType(type)
+                        SqlDbType = (SqlDbType) sqlDbType
                     });
                 }
             }
-            _ = await this.dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
+            _ = await this.dbContext.Database.ExecuteSqlRawAsync(SQL, parameters, cancellationToken);
             return (int)parameters.FirstOrDefault().Value;
         }
 

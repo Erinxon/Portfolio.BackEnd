@@ -5,6 +5,11 @@ namespace Domain.Entities
 {
     public partial class Skill
     {
+        public Skill()
+        {
+            ProyectSkills = new HashSet<ProyectSkill>();
+        }
+
         public int SkillId { get; set; }
         public int? LanguageId { get; set; }
         public int? LevelId { get; set; }
@@ -14,6 +19,6 @@ namespace Domain.Entities
         public virtual Language Language { get; set; }
         public virtual Level Level { get; set; }
         public virtual User User { get; set; }
-        public virtual ProyectSkill ProyectSkill { get; set; }
+        public virtual ICollection<ProyectSkill> ProyectSkills { get; set; }
     }
 }

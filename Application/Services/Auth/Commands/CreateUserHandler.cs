@@ -27,7 +27,7 @@ namespace Application.Services.Auth.Commands
 
         public async Task<ApiResponse<AuthenticationResult>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            int UserId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync($"exec [dbo].[Sp_CreateUser] '{request.Name}', '{request.Email}', '{request.Password.ToEncryptedPassword()}', @Identity out", cancellationToken);
+            int UserId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync(StoreProcedure.Sp_CreateUser, request with { Password = request.Password.ToEncryptedPassword() }, cancellationToken);
 
             if (UserId <= 0)
             {

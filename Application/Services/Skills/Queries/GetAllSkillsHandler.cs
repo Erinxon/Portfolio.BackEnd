@@ -3,7 +3,7 @@ using Domain.Entities;
 using Application.Common.Interfaces.Persitence;
 using Domain.Shared;
 using Application.DTOs.ApiResponse;
-using Domain.Entities;
+using Application.Specifications;
 
 namespace Application.Services.Skills.Queries
 {
@@ -29,7 +29,7 @@ namespace Application.Services.Skills.Queries
 
         public async Task<ApiResponse<IEnumerable<Skill>>> Handle(GetAllSkillsQuery request, CancellationToken cancellationToken)
         {
-            var skills = await fromSqlRaw.GetAllFromSql<Skill>(new FromSqlRawParams("[dbo].[Sp_GetSkills] {0}", new object[] { request.UserId }), cancellationToken);
+            var skills = await fromSqlRaw.GetAllFromSql<Skill>(new FromSqlRawParams(StoreProcedure.Sp_GetSkills, new object[] { request.UserId }), cancellationToken);
             return new ApiResponse<IEnumerable<Skill>>(skills);
         }
 

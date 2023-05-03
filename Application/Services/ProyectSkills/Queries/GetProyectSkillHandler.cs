@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -32,7 +33,7 @@ namespace Application.Services.ProyectSkills.Queries
 
         public async Task<IEnumerable<ViewProyectSkill>> Handle(GetProyectSkillQuery request, CancellationToken cancellationToken)
         {
-            var ProyectSkills = await fromSqlRaw.GetAllFromSql<ViewProyectSkill>(new FromSqlRawParams("[dbo].[Sp_GetProyectSkills] {0}", new object[] { request.ProyectId }), cancellationToken);
+            var ProyectSkills = await fromSqlRaw.GetAllFromSql<ViewProyectSkill>(new FromSqlRawParams(StoreProcedure.Sp_GetProyectSkills, new object[] { request.ProyectId }), cancellationToken);
             return ProyectSkills;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -35,7 +36,7 @@ namespace Application.Services.Auth.Queries
         public async  Task<ApiResponse<User>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var response = new ApiResponse<User>();
-            response.Data = await this._fromSqlRawGenery.GetSingleFromSql<User>(new FromSqlRawParams("[dbo].[Sp_GetUsers] {0}", new object[] { request.UserId }), cancellationToken);
+            response.Data = await this._fromSqlRawGenery.GetSingleFromSql<User>(new FromSqlRawParams(StoreProcedure.Sp_GetUsers, new object[] { request.UserId }), cancellationToken);
             return response;
         }
     }

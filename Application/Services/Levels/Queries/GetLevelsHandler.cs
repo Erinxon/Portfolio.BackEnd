@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -24,7 +25,7 @@ namespace Application.Services.Levels.Queries
 
         public async Task<ApiResponse<IEnumerable<ViewLevel>>> Handle(GetLevelsQuery request, CancellationToken cancellationToken)
         {
-            var Levels = await fromSqlRaw.GetAllFromSql<ViewLevel>(new FromSqlRawParams("[dbo].[Sp_GetLevels] {0}", new object[] { null }), cancellationToken);
+            var Levels = await fromSqlRaw.GetAllFromSql<ViewLevel>(new FromSqlRawParams(StoreProcedure.Sp_GetLevels, new object[] { null }), cancellationToken);
             return new ApiResponse<IEnumerable<ViewLevel>>(Levels);
         }
     }

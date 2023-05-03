@@ -28,7 +28,7 @@ namespace Application.Services.Auth.Commands
         {
             User user = await this.fromSqlRawGeneric
                 .GetSingleFromSql<User>(
-                new FromSqlRawParams("[dbo].[Sp_AuthUser] {0}, {1}", 
+                new FromSqlRawParams(StoreProcedure.Sp_AuthUser, 
                 new object[] { request.Email, request.Password.ToEncryptedPassword() }), 
                 cancellationToken);
 

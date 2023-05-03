@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -32,7 +33,7 @@ namespace Application.Services.WorkExperience.Queries
 
         public async Task<ApiResponse<IEnumerable<ViewWorkExperience>>> Handle(GetWorkExperienceQuery request, CancellationToken cancellationToken)
         {
-            var skills = await fromSqlRaw.GetAllFromSql<ViewWorkExperience>(new FromSqlRawParams("[dbo].[Sp_GetWorkExperience] {0}", new object[] { request.UserId }), cancellationToken);
+            var skills = await fromSqlRaw.GetAllFromSql<ViewWorkExperience>(new FromSqlRawParams(StoreProcedure.Sp_GetWorkExperience, new object[] { request.UserId }), cancellationToken);
             return new ApiResponse<IEnumerable<ViewWorkExperience>>(skills);
         }
     }

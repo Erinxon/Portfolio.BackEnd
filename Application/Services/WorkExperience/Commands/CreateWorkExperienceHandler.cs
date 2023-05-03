@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
+using Application.Specifications;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -23,8 +24,7 @@ namespace Application.Services.WorkExperience.Commands
 
         public async Task<ApiResponse<int>> Handle(CreateWorkExperienceCommand request, CancellationToken cancellationToken)
         {
-            var sql = $"exec [dbo].[Sp_SetWorkExperience] @WorkExperienceId, @CompanyName, @PositionName, @Description, @UserId, @StartDate, @EndDate, @Identity out";
-            var WorkExperienceId = await this.fromSqlRaw.ExecuteSqlRawAsync(sql, request, cancellationToken);
+            var WorkExperienceId = await this.fromSqlRaw.ExecuteSqlRawAsync(StoreProcedure.Sp_SetWorkExperience, request, cancellationToken);
             return new ApiResponse<int>(WorkExperienceId);
         }
     }

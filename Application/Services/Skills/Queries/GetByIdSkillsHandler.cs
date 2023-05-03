@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces.Persitence;
 using Application.DTOs.ApiResponse;
-using Domain.Entities;
+using Application.Specifications;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
@@ -28,7 +28,7 @@ namespace Application.Services.Skills.Queries
 
         public async Task<ApiResponse<Skill>> Handle(GetByIdSkillsQuery request, CancellationToken cancellationToken)
         {
-            var skill = await _fromSqlRawGenery.GetSingleFromSql<Skill>(new FromSqlRawParams("[dbo].[Sp_GetSkills] {0}", new object[] { request.UserId }), cancellationToken);
+            var skill = await _fromSqlRawGenery.GetSingleFromSql<Skill>(new FromSqlRawParams(StoreProcedure.Sp_GetSkills, new object[] { request.UserId }), cancellationToken);
 
             return new ApiResponse<Skill>(skill);
         }

@@ -2,6 +2,7 @@
 using Application.DTOs.ApiResponse;
 using Application.DTOs.Proyects;
 using Application.Services.ProyectSkills.Queries;
+using Application.Specifications;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Shared;
@@ -39,7 +40,7 @@ namespace Application.Services.Proyects.Queries
 
         public async Task<ApiResponse<IEnumerable<GetProyectDto>>> Handle(GetProyectsQuery request, CancellationToken cancellationToken)
         {
-            var proyects = await fromSqlRaw.GetAllFromSql<ViewProyect>(new FromSqlRawParams("[dbo].[Sp_GetProyects] {0}", new object[] { request.UserId }), cancellationToken);
+            var proyects = await fromSqlRaw.GetAllFromSql<ViewProyect>(new FromSqlRawParams(StoreProcedure.Sp_GetProyects, new object[] { request.UserId }), cancellationToken);
            
             var response = new ApiResponse<IEnumerable<GetProyectDto>>(_mapper.Map<IEnumerable<GetProyectDto>>(proyects));
             await Task.Run(async () =>

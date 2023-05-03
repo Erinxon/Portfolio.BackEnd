@@ -54,4 +54,24 @@ namespace Application.Specifications
         public const int Code504 = 504; // Gateway Timeout
     }
 
+    public static class StoreProcedure
+    {
+        public const string Sp_GetPlatforms = "[dbo].[Sp_GetPlatforms] {0}";
+        public const string Sp_GetLanguages = "[dbo].[Sp_GetLanguages] {0}";
+        public const string Sp_GetLevels = "[dbo].[Sp_GetLevels] {0}";
+        public const string Sp_GetProyects = "[dbo].[Sp_GetProyects] {0}";
+        public const string Sp_GetProyectSkills = "[dbo].[Sp_GetProyectSkills] {0}";
+        public const string Sp_GetSkills = "[dbo].[Sp_GetSkills] {0}";
+        public const string Sp_GetWorkExperience = "[dbo].[Sp_GetWorkExperience] {0}";
+        public const string Sp_GetUsers = "[dbo].[Sp_GetUsers] {0}";
+        public const string Sp_AuthUser = "[dbo].[Sp_AuthUser] {0}, {1}";
+
+        public const string Sp_SetSkills = "exec [dbo].[Sp_SetSkills] @LanguageId, @LevelId, @UserId, @Identity out";
+        public const string Sp_SetWorkExperience = "exec [dbo].[Sp_SetWorkExperience] @WorkExperienceId, @CompanyName, @PositionName, @Description, @UserId, @StartDate, @EndDate, @Identity out";
+        public const string Sp_SetProyect = "exec [dbo].[Sp_SetProyect] @ProyectId, @Name, @Description, @ImageGuidId, @GithubUrl, @DomainUrl, @PlatformId, @UserId, @Identity out";
+        public const string Sp_SetProyectSkills = "exec [dbo].[Sp_SetProyectSkills] @ProyectSkillId, @ProyectId, @SkillId, @Identity out";
+        public const string Sp_CreateUser = "exec [dbo].[Sp_CreateUser] @Name, @Email, @Password, @Identity out";
+       
+    }
+
 }

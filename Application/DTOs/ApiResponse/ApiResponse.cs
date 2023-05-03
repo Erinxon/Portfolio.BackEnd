@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.ApiResponse
 {
-    public record ErrorDetail(string Description, string ErrorCode, int StatusCode, Guid ErrorId);
+    public record ErrorDetail(string Description, int StatusCode, Guid ErrorId);
 
     public record ApiResponse<T>
     {
@@ -26,7 +26,7 @@ namespace Application.DTOs.ApiResponse
         {
             var error = new ErrorDictionaries().ErrorDescriptions.FirstOrDefault(d => d.Key == ErrorCode);
             this.Succeeded = false;
-            this.ErrorDetail = new ErrorDetail(error.Value, error.Key, StatusCode, Guid.NewGuid());
+            this.ErrorDetail = new ErrorDetail(error.Value, StatusCode, Guid.NewGuid());
         }
 
         public ApiResponse(int Identity)

@@ -1,6 +1,6 @@
 # Portfolio.BackEnd
 
-# Diagrama Db
+# Diagrama DB
 
 ![DiagramaDb](https://user-images.githubusercontent.com/30541728/236626990-b7d89a43-e40b-46fb-a5e2-900a785423a8.png)
 

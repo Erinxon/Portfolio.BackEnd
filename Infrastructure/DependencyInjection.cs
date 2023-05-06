@@ -21,7 +21,7 @@ namespace Infrastructure
             {
                 option.UseSqlServer(configuration.GetConnectionString(ConstSetting.ConnectionString));
             });
-            services.AddScoped<IFromSqlRawGeneric, FromSqlRawGenery>();
+            services.AddScoped<IFromSqlRawGeneric, FromSqlRawGeneric>();
             services.Configure<JwtAuthSetting>(configuration.GetSection(ConstSetting.JwtAuthSection)); 
             services.AddSingleton<IJwtGenerator, JwtGenerator>();
             services.AddJwt(configuration);

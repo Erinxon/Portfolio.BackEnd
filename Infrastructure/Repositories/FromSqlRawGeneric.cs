@@ -11,12 +11,12 @@ using System.Data;
 
 namespace Infrastructure.Repositories
 {
-    public class FromSqlRawGenery : IFromSqlRawGeneric
+    public class FromSqlRawGeneric : IFromSqlRawGeneric
     {
         private readonly PortfolioDbContext dbContext;
         private IDbContextTransaction transaction;
 
-        public FromSqlRawGenery(PortfolioDbContext dbContext)
+        public FromSqlRawGeneric(PortfolioDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

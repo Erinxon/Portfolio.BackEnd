@@ -12,28 +12,28 @@ using System.Threading.Tasks;
 
 namespace Application.Services.ProyectSkills.Queries
 {
-    public class GetProyectSkillQuery : IRequest<IEnumerable<ViewProyectSkill>>
+    public class GetProjectSkillQuery : IRequest<IEnumerable<ViewProyectSkill>>
     {
         public int ProyectId { get; set; }
 
-        public GetProyectSkillQuery(int ProyectId)
+        public GetProjectSkillQuery(int ProyectId)
         {
             this.ProyectId = ProyectId;
         }
     }
 
-    public class GetProyectSkillHandler : IRequestHandler<GetProyectSkillQuery, IEnumerable<ViewProyectSkill>>
+    public class GetProjectSkillHandler : IRequestHandler<GetProjectSkillQuery, IEnumerable<ViewProyectSkill>>
     {
         private readonly IFromSqlRawGeneric fromSqlRaw;
 
-        public GetProyectSkillHandler(IFromSqlRawGeneric fromSqlRaw)
+        public GetProjectSkillHandler(IFromSqlRawGeneric fromSqlRaw)
         {
             this.fromSqlRaw = fromSqlRaw;
         }
 
-        public async Task<IEnumerable<ViewProyectSkill>> Handle(GetProyectSkillQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ViewProyectSkill>> Handle(GetProjectSkillQuery request, CancellationToken cancellationToken)
         {
-            var ProyectSkills = await fromSqlRaw.GetAllFromSql<ViewProyectSkill>(new FromSqlRawParams(StoreProcedure.Sp_GetProyectSkills, new object[] { request.ProyectId }), cancellationToken);
+            var ProyectSkills = await fromSqlRaw.GetAllFromSql<ViewProyectSkill>(new FromSqlRawParams(StoreProcedure.Sp_GetProjectSkills, new object[] { request.ProyectId }), cancellationToken);
             return ProyectSkills;
         }
     }

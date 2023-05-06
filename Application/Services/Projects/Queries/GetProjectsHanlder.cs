@@ -15,37 +15,37 @@ using System.Threading.Tasks;
 
 namespace Application.Services.Proyects.Queries
 {
-    public record GetProyectsQuery : IRequest<ApiResponse<IEnumerable<GetProyectDto>>>
+    public record GetProjectsQuery : IRequest<ApiResponse<IEnumerable<GetProyectDto>>>
     {
         public int UserId { get; set; }
 
-        public GetProyectsQuery(int UserId)
+        public GetProjectsQuery(int UserId)
         {
             this.UserId = UserId;
         }
     }
 
-    public class GetProyectsHanlder : IRequestHandler<GetProyectsQuery, ApiResponse<IEnumerable<GetProyectDto>>>
+    public class GetProjectsHanlder : IRequestHandler<GetProjectsQuery, ApiResponse<IEnumerable<GetProyectDto>>>
     {
         private readonly IFromSqlRawGeneric fromSqlRaw;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public GetProyectsHanlder(IFromSqlRawGeneric fromSqlRaw, IMediator mediato, IMapper mapper)
+        public GetProjectsHanlder(IFromSqlRawGeneric fromSqlRaw, IMediator mediato, IMapper mapper)
         {
             this.fromSqlRaw = fromSqlRaw;
             this._mediator = mediato;
             this._mapper = mapper;
         }
 
-        public async Task<ApiResponse<IEnumerable<GetProyectDto>>> Handle(GetProyectsQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<IEnumerable<GetProyectDto>>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
-            var proyects = await fromSqlRaw.GetAllFromSql<ViewProyect>(new FromSqlRawParams(StoreProcedure.Sp_GetProyects, new object[] { request.UserId }), cancellationToken);
+            var proyects = await fromSqlRaw.GetAllFromSql<ViewProyect>(new FromSqlRawParams(StoreProcedure.Sp_GetProjects, new object[] { request.UserId }), cancellationToken);
            
             var response = new ApiResponse<IEnumerable<GetProyectDto>>(_mapper.Map<IEnumerable<GetProyectDto>>(proyects));
             foreach (var proyect in response.Data)
             {
-                proyect.ProyectSkills = await this._mediator.Send(new GetProyectSkillQuery(proyect.ProyectId), cancellationToken);
+                proyect.ProyectSkills = await this._mediator.Send(new GetProjectSkillQuery(proyect.ProyectId), cancellationToken);
             }
             return response;
         }

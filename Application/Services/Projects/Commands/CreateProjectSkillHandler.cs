@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services.Proyects.Commands
 {
-    public record CreateProyectCommand : IRequest<ApiResponse<int>>
+    public record CreateProjectCommand : IRequest<ApiResponse<int>>
     {
         public int ProyectId { get; set; }
         public string Name { get; set; }
@@ -22,29 +22,29 @@ namespace Application.Services.Proyects.Commands
         public string DomainUrl { get; set; }
         public int PlatformId { get; set; }
         public int UserId { get; set; }
-        public List<CreateProyectSkillCommand> CreateProyectSkillCommands { get; set; }
+        public List<CreateProjectSkillCommand> CreateProyectSkillCommands { get; set; }
     }
 
-    public class CreateProyectSkillHandler : IRequestHandler<CreateProyectCommand, ApiResponse<int>>
+    public class CreateProjectSkillHandler : IRequestHandler<CreateProjectCommand, ApiResponse<int>>
     {
         private readonly IFromSqlRawGeneric fromSqlRawGeneric;
         private readonly IMediator _mediator;
 
-        public CreateProyectSkillHandler(IFromSqlRawGeneric fromSqlRawGeneric, IMediator mediator)
+        public CreateProjectSkillHandler(IFromSqlRawGeneric fromSqlRawGeneric, IMediator mediator)
         {
             this.fromSqlRawGeneric = fromSqlRawGeneric;
             this._mediator = mediator;
         }
 
-        public async Task<ApiResponse<int>> Handle(CreateProyectCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<int>> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
             await this.fromSqlRawGeneric.BeginTransactionAsync(cancellationToken);
             try
             {
-                var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync(StoreProcedure.Sp_SetProyect, request, cancellationToken);
+                var ProyectId = await this.fromSqlRawGeneric.ExecuteSqlRawAsync(StoreProcedure.Sp_SetProject, request, cancellationToken);
                 foreach (var ProyectSkill in request?.CreateProyectSkillCommands)
                 {
-                    CreateProyectSkillCommand createProyectSkill = ProyectSkill with { ProyectId = ProyectId };
+                    CreateProjectSkillCommand createProyectSkill = ProyectSkill with { ProyectId = ProyectId };
                     await _mediator.Send(createProyectSkill, cancellationToken);
                 }
                 await this.fromSqlRawGeneric.CommitTransactionAsync(cancellationToken);

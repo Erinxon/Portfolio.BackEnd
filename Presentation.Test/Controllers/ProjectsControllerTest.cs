@@ -14,20 +14,22 @@ namespace Test.Controllers
 {
     public class ProjectsControllerTest
     {
+        private readonly IMediator _mediator;
+
+        public ProjectsControllerTest()
+        {
+            this._mediator = new Mock<IMediator>().Object;
+        }
 
         [Fact]
         public async void GetProjectsOK()
         {
             /// Arrange
-            var _mediator = new Mock<IMediator>();
-            var projectsController = new ProjectsController(_mediator.Object);
+            var projectsController = new ProjectsController(_mediator);
             var UserId = 3;
-             
             /// Act
             var result = await projectsController.Get(UserId);
-
-
-            // /// Assert
+            /// Assert
             result?.Value?.Succeeded.Should().Be(true);
         }
 
@@ -35,15 +37,11 @@ namespace Test.Controllers
         public async void GetProjectsHasValue()
         {
             /// Arrange
-            var _mediator = new Mock<IMediator>();
-            var projectsController = new ProjectsController(_mediator.Object);
+            var projectsController = new ProjectsController(_mediator);
             var UserId = 3;
-
             /// Act
             var result = await projectsController.Get(UserId);
-
-
-            // /// Assert
+            /// Assert
             result?.Value?.Data.Should().HaveCountGreaterThan(0);
         }
 
@@ -51,9 +49,7 @@ namespace Test.Controllers
         public async void CreateProjectSuccced()
         {
             /// Arrange
-            var _mediator = new Mock<IMediator>();
-            var projectsController = new ProjectsController(_mediator.Object);
-
+            var projectsController = new ProjectsController(_mediator);
             CreateProjectCommand createProjectCommand = new CreateProjectCommand()
             {
                 Name = "Aplicación para registrar gastos e ingresos",
@@ -67,29 +63,23 @@ namespace Test.Controllers
                     new CreateProjectSkillCommand(0,0,10)
                 }
             };
-
             /// Act
             var result = await projectsController.Post(createProjectCommand);
-
-            // /// Assert
+            /// Assert
             result?.Value?.Succeeded.Should().Be(true);
         }
 
         [Fact]
         public async void CreateProjectFailed()
         {
-            var _mediator = new Mock<IMediator>();
-            var projectsController = new ProjectsController(_mediator.Object);
-
+            /// Arrange
+            var projectsController = new ProjectsController(_mediator);
             CreateProjectCommand createProjectCommand = new CreateProjectCommand();
-
             /// Act
             var result = await projectsController.Post(createProjectCommand);
-
-            // /// Assert
+            /// Assert
             result?.Value?.Succeeded.Should().Be(false);
         }
-
         
     }
 }

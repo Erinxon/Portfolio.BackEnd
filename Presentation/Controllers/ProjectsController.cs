@@ -20,16 +20,16 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{UserId}")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<Proyect>>>> Get(int UserId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<IEnumerable<Proyect>>>> Get(int UserId, CancellationToken cancellationToken = new CancellationToken())
         {
             return Ok(await _mediator.Send(new GetProjectsQuery(UserId), cancellationToken));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<int>>> Post([FromBody] CreateProjectCommand CreateProjectCommand, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<int>>> Post([FromBody] CreateProjectCommand CreateProjectCommand, CancellationToken cancellationToken = new CancellationToken())
         {
             var response = await _mediator.Send(CreateProjectCommand, cancellationToken);
-            return response.ErrorDetail is null ? Ok(response) : StatusCode(response.ErrorDetail.StatusCode, response);
+            return response?.ErrorDetail is null ? Ok(response) : StatusCode((int) response?.ErrorDetail?.StatusCode, response);
         }
     }
 }

@@ -25,12 +25,12 @@ namespace Application.Services.Proyects.Commands
         public List<CreateProjectSkillCommand> CreateProyectSkillCommands { get; set; }
     }
 
-    public class CreateProjectSkillHandler : IRequestHandler<CreateProjectCommand, ApiResponse<int>>
+    public class CreateProjectHandler : IRequestHandler<CreateProjectCommand, ApiResponse<int>>
     {
         private readonly IFromSqlRawGeneric fromSqlRawGeneric;
         private readonly IMediator _mediator;
 
-        public CreateProjectSkillHandler(IFromSqlRawGeneric fromSqlRawGeneric, IMediator mediator)
+        public CreateProjectHandler(IFromSqlRawGeneric fromSqlRawGeneric, IMediator mediator)
         {
             this.fromSqlRawGeneric = fromSqlRawGeneric;
             this._mediator = mediator;
